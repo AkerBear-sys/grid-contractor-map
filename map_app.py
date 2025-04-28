@@ -4,6 +4,34 @@ import folium
 from streamlit_folium import st_folium
 
 # --------------------------
+# SIMPLE LOGIN AUTHENTICATION
+# --------------------------
+# Define login credentials
+USERNAME = "admin"
+PASSWORD = "secret123"
+
+# Create a simple login form
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+    with st.form("Login"):
+        st.title("🔐 Please log in")
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        submitted = st.form_submit_button("Login")
+
+        if submitted:
+            if username == USERNAME and password == PASSWORD:
+                st.session_state.authenticated = True
+                st.success("✅ Login successful!")
+                st.experimental_rerun()
+            else:
+                st.error("❌ Incorrect username or password.")
+
+    st.stop()  # 🚫 Stop the app here if not authenticated
+# --------------------------
+
 # Load contractors from CSV
 # --------------------------
 df = pd.read_csv("contractors_data.csv")
