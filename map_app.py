@@ -6,8 +6,8 @@ from streamlit_folium import st_folium
 # SIMPLE LOGIN AUTHENTICATION (Single User)
 # --------------------------
 # Define login credentials
-USERNAME = "griduser"
-PASSWORD = "civil123"
+USERNAME = "Aker"
+PASSWORD = "ENTR"
 
 # Create a simple login form
 if "authenticated" not in st.session_state:
