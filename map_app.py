@@ -2,13 +2,12 @@ import streamlit as st
 import pandas as pd
 import folium
 from streamlit_folium import st_folium
-
 # --------------------------
-# SIMPLE LOGIN AUTHENTICATION
+# SIMPLE LOGIN AUTHENTICATION (Single User)
 # --------------------------
 # Define login credentials
-USERNAME = "Aker"
-PASSWORD = "ENTR"
+USERNAME = "griduser"
+PASSWORD = "civil123"
 
 # Create a simple login form
 if "authenticated" not in st.session_state:
@@ -24,13 +23,11 @@ if not st.session_state.authenticated:
         if submitted:
             if username == USERNAME and password == PASSWORD:
                 st.session_state.authenticated = True
-                st.success("✅ Login successful!")
-                st.experimental_rerun()
+                st.success("✅ Login successful! Please refresh the page manually (F5).")
             else:
                 st.error("❌ Incorrect username or password.")
 
     st.stop()  # 🚫 Stop the app here if not authenticated
-# --------------------------
 
 # Load contractors from CSV
 # --------------------------
