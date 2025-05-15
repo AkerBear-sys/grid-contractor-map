@@ -120,7 +120,8 @@ for contractor in filtered_contractors:
 <b>Type:</b> {contractor['company_type']}{website_link}
 """
 
-    marker_color = 'blue' if contractor['company_type'] == 'Civil Engineering' else 'red'
+    is_selected = contractor['name'] == st.session_state.get("selected_company")
+    marker_color = 'lime' if is_selected else ('blue' if contractor['company_type'] == 'Civil Engineering' else 'red')
 
     folium.CircleMarker(
         location=contractor["coords"],
