@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import folium
 from streamlit_folium import st_folium
+
 # --------------------------
 # SIMPLE LOGIN AUTHENTICATION (Auto rerun)
 # --------------------------
@@ -63,6 +64,7 @@ with st.sidebar.expander("🔎 Filters", expanded=True):
         st.session_state.company_type_filter = "All"
         st.session_state.selected_services = []
         st.session_state.region_filter = "All"
+        st.session_state.selected_company = None
 
     region_options = sorted(set([c["region"] for c in contractors]))
     region_filter = st.selectbox("🌍 Select region", ["All"] + region_options, key="region_filter")
@@ -136,15 +138,15 @@ for contractor in filtered_contractors:
     ).add_to(m)
 
 # --------------------------
-# Render map and detect click
+# Render Map in Streamlit and Capture Click
 # --------------------------
-clicked_data = st_folium(m, width=2200, height=1300, returned_objects=["last_object_clicked_popup"])
+click_data = st_folium(m, width=2200, height=1300, returned_objects=["last_object_clicked_popup"])
 
-# Update selected company name from click
-if clicked_data and "last_object_clicked_popup" in clicked_data:
-    popup_html = clicked_data["last_object_clicked_popup"]
-    if popup_html and "<b>" in popup_html:
-        name_start = popup_html.find("<b>") + 3
-        name_end = popup_html.find("</b>")
-        selected_company_name = popup_html[name_start:name_end]
-        st.session_state.selected_company = selected_company_name
+# --------------------------
+# Handle Clicks to Select Company
+# --------------------------
+if click_data and click_data.get("last_object_clicked_popup"):
+    popup = click_data["last_object_clicked_popup"]
+    if "<b>" in popup and "</b>" in popup:
+        name = popup.split("<b>")[1].split("</b>")[0].strip()
+        st.session_state.selected_company = name
