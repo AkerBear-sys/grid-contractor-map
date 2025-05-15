@@ -106,7 +106,7 @@ else:
     m = folium.Map(location=[30, 0], zoom_start=3, tiles='CartoDB dark_matter', prefer_canvas=True, no_wrap=True)
 
 # --------------------------
-# Display Filtered Contractors
+# Display Filtered Contractors with Highlighting
 # --------------------------
 for contractor in filtered_contractors:
     website_link = f'<br><a href="{contractor["website"]}" target="_blank">Visit Website</a>' if contractor["website"] else ""
@@ -125,9 +125,9 @@ for contractor in filtered_contractors:
 
     folium.CircleMarker(
         location=contractor["coords"],
-        radius=6,
+        radius=8 if is_selected else 6,
         color=marker_color,
-        weight=8,
+        weight=10 if is_selected else 8,
         fill=True,
         fill_color=marker_color,
         fill_opacity=0.9,
@@ -136,6 +136,15 @@ for contractor in filtered_contractors:
     ).add_to(m)
 
 # --------------------------
-# Render Map in Streamlit
+# Render map and detect click
 # --------------------------
-st_folium(m, width=2200, height=1300)
+clicked_data = st_folium(m, width=2200, height=1300, returned_objects=["last_object_clicked_popup"])
+
+# Update selected company name from click
+if clicked_data and "last_object_clicked_popup" in clicked_data:
+    popup_html = clicked_data["last_object_clicked_popup"]
+    if popup_html and "<b>" in popup_html:
+        name_start = popup_html.find("<b>") + 3
+        name_end = popup_html.find("</b>")
+        selected_company_name = popup_html[name_start:name_end]
+        st.session_state.selected_company = selected_company_name
