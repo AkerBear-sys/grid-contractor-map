@@ -140,13 +140,17 @@ for contractor in filtered_contractors:
 # --------------------------
 # Render Map in Streamlit and Capture Click
 # --------------------------
-click_data = st_folium(m, width=2200, height=1300, returned_objects=["last_object_clicked_popup"])
+click_data = st_folium(m, width=2200, height=1300, returned_objects=["last_clicked"])
 
 # --------------------------
-# Handle Clicks to Select Company
+# Handle Clicks to Select Company by Coordinates
 # --------------------------
-if click_data and click_data.get("last_object_clicked_popup"):
-    popup = click_data["last_object_clicked_popup"]
-    if "<b>" in popup and "</b>" in popup:
-        name = popup.split("<b>")[1].split("</b>")[0].strip()
-        st.session_state.selected_company = name
+if click_data and click_data.get("last_clicked"):
+    clicked_lat = click_data["last_clicked"]["lat"]
+    clicked_lng = click_data["last_clicked"]["lng"]
+
+    for contractor in filtered_contractors:
+        lat, lng = contractor["coords"]
+        if abs(clicked_lat - lat) < 0.0005 and abs(clicked_lng - lng) < 0.0005:
+            st.session_state.selected_company = contractor["name"]
+            break
